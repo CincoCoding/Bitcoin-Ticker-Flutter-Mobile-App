@@ -55,16 +55,24 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 
   //12. Create a variable to hold the value and use in our Text Widget. Give the variable a starting value of '?' before the data comes back from the async methods.
-  String bitcoinValueInSelectedCurrency = '?';
-
+  // for (var i = 0;  i < cryptoList.length(); i++){
+  String BTCValueInSelectedCurrency = '?';
+  String ETHValueInSelectedCurrency = '?';
+  String LTCValueInSelectedCurrency = '?';
+  // }
   //11. Create an async method here await the coin data from coin_data.dart
   void getData() async {
     try {
-      double data = await CoinData().getCoinData(selectedCurrency);
+      double BTCData = await CoinData().getCoinData("BTC", selectedCurrency);
+      double ETHData = await CoinData().getCoinData("ETH", selectedCurrency);
+      double LTCData = await CoinData().getCoinData("LTC", selectedCurrency);
       //13. We can't await in a setState(). So you have to separate it out into two steps.
       setState(() {
-        bitcoinValueInSelectedCurrency = data.toStringAsFixed(0);
-        print(bitcoinValueInSelectedCurrency);
+        BTCValueInSelectedCurrency = BTCData.toStringAsFixed(0);
+        ETHValueInSelectedCurrency = ETHData.toStringAsFixed(0);
+        LTCValueInSelectedCurrency = LTCData.toStringAsFixed(0);
+
+        print(BTCValueInSelectedCurrency);
       });
     } catch (e) {
       print(e);
@@ -88,9 +96,9 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          buildCryptoCard(),
-          buildCryptoCard(),
-          buildCryptoCard(),
+          buildCryptoCard("BTC", BTCValueInSelectedCurrency),
+          buildCryptoCard("ETH", ETHValueInSelectedCurrency),
+          buildCryptoCard("LTC", LTCValueInSelectedCurrency),
           Container(
             height: 150.0,
             alignment: Alignment.center,
@@ -103,7 +111,7 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  Padding buildCryptoCard() {
+  Padding buildCryptoCard(crypto, cryptoValueInSelectedCurrency) {
     return Padding(
       padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
       child: Card(
@@ -115,7 +123,7 @@ class _PriceScreenState extends State<PriceScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
           child: Text(
-            '1 BTC = $bitcoinValueInSelectedCurrency $selectedCurrency',
+            '1 $crypto = $cryptoValueInSelectedCurrency $selectedCurrency',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20.0,
